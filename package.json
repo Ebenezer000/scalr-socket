@@ -1,10 +1,10 @@
 {
-  "name": "@scalr.socket/plugin",
+  "name": "@scalr.socket",
   "version": "1.0.1",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
-  "repository": "https://github.com/scalr-soket/plugin",
+  "repository": "https://github.com/scalr-socket",
   "license": "MIT",
   "keywords": [
     "library",

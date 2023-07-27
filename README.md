@@ -5,13 +5,13 @@ The plugin can be installed via NPM or Yarn.
 **NPM :**
 
 ```bash
-npm install @scalr.socket/plugin
+npm install @scalr.socket
 ```
 
 **Yarn :**
 
 ```bash
-yarn add @scalr.socket/plugin
+yarn add @scalr.socket
 ```
 
 **Note :** The plugin requires `react` (>=17.0.1) and `react-dom` (>=17.0.1) as peerDepencies.
