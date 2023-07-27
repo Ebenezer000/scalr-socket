@@ -1,5 +1,5 @@
 {
-  "name": "@scalr.socket",
+  "name": "scalr.socket",
   "version": "1.0.1",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
