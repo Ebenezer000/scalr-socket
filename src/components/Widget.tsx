@@ -24,6 +24,7 @@ import { OpRewards, OpRewardsModal } from "./OpRewards";
 import { useChains } from "../hooks/apis";
 import { useCustomSettings } from "../hooks/useCustomSettings";
 import { CreditCard, Edit } from "react-feather";
+import { IoSwapVertical } from "react-icons/io5"
 import { useTransition } from "@react-spring/web";
 import {
   setActiveRoute,
@@ -136,16 +137,23 @@ export const Widget = (props: WidgetProps) => {
             )}
           </div>
         </Header>
-        <Input
-          customTokenList={props.tokenList}
-          onTokenChange={props.onSourceTokenChange}
-          onNetworkChange={props.onSourceNetworkChange}
-        />
-        <Output
-          customTokenList={props.tokenList}
-          onTokenChange={props.onDestinationTokenChange}
-          onNetworkChange={props.onDestinationNetworkChange}
-        />
+        <div>
+          <Input
+            customTokenList={props.tokenList}
+            onTokenChange={props.onSourceTokenChange}
+            onNetworkChange={props.onSourceNetworkChange}
+          />
+        </div>
+        <IoSwapVertical/>
+        <div>
+        
+          <Output
+            customTokenList={props.tokenList}
+            onTokenChange={props.onDestinationTokenChange}
+            onNetworkChange={props.onDestinationNetworkChange}
+          />
+          
+        </div>
         {props.enableRefuel && (
           <Refuel selectivelyShowRefuel={props.selectivelyShowRefuel} />
         )}
