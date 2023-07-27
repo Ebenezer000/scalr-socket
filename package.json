@@ -1,0 +1,81 @@
+{
+  "name": "@bridge-socket/plugin",
+  "version": "1.0.1",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "repository": "https://github.com/SocketDotTech/plugin",
+  "license": "MIT",
+  "keywords": [
+    "library",
+    "plugin",
+    "web3",
+    "bridge",
+    "cross-chain",
+    "swap",
+    "cross-chain-swap",
+    "blockchain",
+    "interoperability"
+  ],
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build:storybook": "build-storybook",
+    "build:lib": "NODE_ENV=publish rollup -c && npm pack",
+    "chromatic": "npx chromatic --project-token=12c9df8b6cf2"
+  },
+  "dependencies": {
+    "@react-spring/web": "^9.5.0",
+    "@reduxjs/toolkit": "^1.8.2",
+    "@socket.tech/ll-core": "^0.1.10",
+    "@socket.tech/socket-v2-sdk": "^1.23.1",
+    "@tippyjs/react": "^4.2.6",
+    "ethers": "^5.6.9",
+    "react-feather": "^2.0.10",
+    "react-redux": "^8.0.2",
+    "swr": "^1.3.0"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.1",
+    "react-dom": ">=17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-react": "^7.17.12",
+    "@rainbow-me/rainbowkit": "^0.4.1",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.3",
+    "@storybook/addon-actions": "^6.5.9",
+    "@storybook/addon-essentials": "^6.5.9",
+    "@storybook/addon-interactions": "^6.5.9",
+    "@storybook/addon-links": "^6.5.9",
+    "@storybook/addon-postcss": "^2.0.0",
+    "@storybook/builder-webpack4": "^6.5.9",
+    "@storybook/manager-webpack4": "^6.5.9",
+    "@storybook/react": "^6.5.9",
+    "@storybook/testing-library": "^0.0.13",
+    "autoprefixer": "^10.4.7",
+    "babel-loader": "^8.2.5",
+    "chromatic": "^6.7.0",
+    "dotenv": "^16.0.1",
+    "postcss": "^8.4.14",
+    "react": ">=17.0.1",
+    "react-dom": ">=17.0.1",
+    "rollup": "^2.75.6",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-polyfill-node": "^0.9.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "tailwindcss": "^3.1.3",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  },
+  "readme": "ERROR: No README data found!",
+  "publishConfig": {
+    "access": "public"
+  }
+}
