@@ -1,6 +1,6 @@
 {
   "name": "scalr-socket",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
@@ -12,10 +12,7 @@
     "web3",
     "bridge",
     "cross-chain",
-    "swap",
-    "cross-chain-swap",
-    "blockchain",
-    "interoperability"
+    "swap"
   ],
   "scripts": {
     "storybook": "start-storybook -p 6006",
