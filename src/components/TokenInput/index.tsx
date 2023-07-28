@@ -31,6 +31,7 @@ export const TokenInput = (props: TokenInputProps) => {
         <div className="stk-w skt-w-flex skt-w-flex-col skt-w-relative" >
           <input
             className={`skt-w skt-w-input skt-w-text-widget-primary skt-w-text-3xl focus:skt-w-outline-none skt-w-w-full skt-w-h-full skt-w-overflow-ellipsis skt-w-bg-transparent`}
+            style={{color:"black"}}
             value={amount}
             onChange={(e) => onChangeInput(e.target.value)}
             placeholder="0.0"

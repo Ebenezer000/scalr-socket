@@ -35,10 +35,13 @@ export const Balance = ({
 };
 
 const Baldiv= styled.div`
+color: rgb(0,0,0);
+font-weight: bold;
 .button{
   margin-left: 7px;
   border-radius: 5px;
   padding: 5px;
+  color: rgb(0,0,0);
   border: none;
   background-color: rgb(241,241,241)
 }
