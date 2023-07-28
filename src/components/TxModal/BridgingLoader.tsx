@@ -129,7 +129,7 @@ export const BridgingLoader = ({
           <p className="skt-w skt-w-text-xs skt-w-font-normal skt-w-text-widget-secondary skt-w-mb-3 skt-w-text-center skt-w-px-3">
             {showSupportLink ? (
               <span>
-                Get in touch for support on{" "}
+                Get in touch with scalr support on{" "}
                 <a
                   href="https://discord.gg/23Gk2Fa9JZ"
                   target="_blank"

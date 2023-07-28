@@ -33,12 +33,13 @@ import {
   setIsTxModalOpen,
 } from "../state/modals";
 import { setSourceAmount } from "../state/amountSlice";
+import { styled } from "styled-components";
 
 // Main Widget -> Base file.
 export const Widget = (props: WidgetProps) => {
   const {
     customize,
-    title = props?.enableSameChainSwaps ? "Bridge & Swap" : "Bridge",
+    title = "Send",
   } = props;
   const customSettings = useContext(CustomizeContext);
   const web3Context = useContext(Web3Context);
@@ -112,7 +113,7 @@ export const Widget = (props: WidgetProps) => {
   }, []);
 
   return (
-    <div
+    <FullWidget
       style={{
         width: widgetWidth,
         borderRadius: `calc(1rem * ${borderRadius})`,
@@ -132,34 +133,40 @@ export const Widget = (props: WidgetProps) => {
               <>
                 <PendingTransactions />
                 <OpRewards />
-                <Settings />
+                <span className="settingsIcon">
+                  <Settings />
+                </span>
               </>
             )}
           </div>
         </Header>
-        <div>
+        <InputBlock>
           <Input
             customTokenList={props.tokenList}
             onTokenChange={props.onSourceTokenChange}
             onNetworkChange={props.onSourceNetworkChange}
           />
-        </div>
-        <IoSwapVertical/>
-        <div>
-        
+        </InputBlock>
+
+        <IoSwapVertical style={{color: "white", fontSize: "2.5em", margin: "10px"}}/>
+
+        <OutputBlock>
           <Output
             customTokenList={props.tokenList}
             onTokenChange={props.onDestinationTokenChange}
             onNetworkChange={props.onDestinationNetworkChange}
           />
+        </OutputBlock>
           
-        </div>
         {props.enableRefuel && (
           <Refuel selectivelyShowRefuel={props.selectivelyShowRefuel} />
         )}
       </div>
       <SingleTxMessage />
-      <RouteDetails />
+      {!props?.provider ? null :
+        <RouteDetails />
+      }
+      
       {transitions(
         (style, item) =>
           item && (
@@ -174,7 +181,7 @@ export const Widget = (props: WidgetProps) => {
       <SettingsModal />
       <OpRewardsModal />
       <ErrorModal />
-    </div>
+    </FullWidget>
   );
 };
 
@@ -209,3 +216,24 @@ const SingleTxMessage = () => {
     </p>
   );
 };
+
+const FullWidget = styled.div`
+background-color: rgba(2, 2, 2, 1);
+.settingsIcon{
+  padding:10px;
+  border-radius:10px;
+  background-color: rgb(241,241,241)
+}
+`
+const InputBlock = styled.div`
+  background-color: rgba(201, 201, 201, 0.7);
+  padding: 15px;
+  margin-top:15px;
+  border-radius: 10px;
+`
+const OutputBlock = styled.div`
+ background-color: rgba(201, 201, 201, 0.7);
+ padding: 15px;
+ border-radius: 10px;
+
+`

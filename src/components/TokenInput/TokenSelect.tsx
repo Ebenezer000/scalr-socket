@@ -7,6 +7,7 @@ import { CustomizeContext } from "../../providers/CustomizeProvider";
 import { Modal } from "../common/Modal";
 import { useTransition } from "@react-spring/web";
 import { SearchBar } from "./SearchBar";
+import { styled } from "styled-components";
 
 interface Props {
   activeToken: Currency;
@@ -111,7 +112,7 @@ export const TokenSelect = (props: Props) => {
         <button
           onClick={() => setOpenTokenList(!openTokenList)}
           className={`skt-w skt-w-input skt-w-button skt-w-flex skt-w-items-center skt-w-flex-1 skt-w-bg-widget-interactive skt-w-flex-shrink-0 skt-w-flex-nowrap skt-w-w-auto skt-w-overflow-hidden skt-w-p-1 skt-w-text-widget-on-interactive`}
-          style={{ borderRadius: `calc(1rem * ${borderRadius})` }}
+          style={{ borderRadius: `calc(1rem * ${borderRadius})`, backgroundColor:"rgba(201, 201, 201, 0.0)", color: "black", fontWeight: "bold"}}
         >
           <img
             src={activeToken?.logoURI}
@@ -146,10 +147,10 @@ export const TokenSelect = (props: Props) => {
                 {displayTokens?.map((token: Currency) => {
                   return (
                     <button
+                      
                       className="skt-w skt-w-input skt-w-button skt-w-flex hover:skt-w-bg-widget-secondary skt-w-items-center skt-w-p-2 skt-w-w-full skt-w-justify-between disabled:skt-w-opacity-60 disabled:skt-w-pointer-events-none"
                       onClick={() => selectToken(token)}
                       key={token?.address}
-                      style={{ borderRadius: `calc(0.5rem * ${borderRadius})` }}
                       disabled={tokenToDisable?.address === token?.address}
                     >
                       <div className="skt-w skt-w-flex skt-w-items-center">

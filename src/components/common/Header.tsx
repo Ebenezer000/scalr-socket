@@ -9,7 +9,7 @@ export function Header({ title, children }: headerProp) {
     <div className="skt-w-flex skt-w-items-center skt-w-justify-between skt-w skt-w-text-widget-primary">
       <>
         {typeof title === "string" ? (
-          <span className="skt-w-font-medium skt-w">{title}</span>
+          <span className="skt-w-font-medium skt-w" style={{fontSize:"20px", fontWeight: "bold"}}>{title}</span>
         ) : (
           title
         )}

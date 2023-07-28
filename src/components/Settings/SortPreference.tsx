@@ -44,7 +44,7 @@ export const SortPreference = () => {
 
   return (
     <div className="skt-w skt-w-flex skt-w-items-center skt-w-relative skt-w-z-30 skt-w-justify-between">
-      <SubTitle>Preferred Route</SubTitle>
+      <SubTitle>Route Priority</SubTitle>
       <div
         className="skt-w skt-w-relative skt-w-border skt-w-border-widget-secondary-text skt-w-border-opacity-40 skt-w-flex skt-w-w-auto skt-w-ml-2"
         style={{ borderRadius: `calc(0.375rem * ${borderRadius})` }}

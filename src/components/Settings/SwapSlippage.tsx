@@ -104,7 +104,7 @@ export const SwapSlippage = () => {
     <div className="skt-w-mt-6">
       <div className="skt-w-flex skt-w-justify-between skt-w-relative">
         <div className="skt-w skt-w-flex skt-w-items-center skt-w-mb-1.5">
-          <SubTitle>Swap Slippage</SubTitle>
+          <SubTitle>Slippage</SubTitle>
           <Popover
             content="Your swap transaction will revert if the price changes unfavourably by more than this percentage."
             classNames="skt-w-bottom-8"

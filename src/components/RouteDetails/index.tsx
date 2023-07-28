@@ -239,7 +239,7 @@ export const RouteDetails = () => {
           rel="noopener noreferrer"
           className="skt-w skt-w-anchor"
         >
-          Support
+          Powerd By Socket
         </a>
       </div>
 

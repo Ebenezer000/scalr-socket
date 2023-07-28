@@ -18,6 +18,7 @@ import { useTokenList } from "../hooks/useTokenList";
 import useDebounce from "../hooks/useDebounce";
 
 import { Web3Context } from "../providers/Web3Provider";
+import { styled } from "styled-components";
 
 // Component that handles the destination chain parameters. (ToChain, Destination Token)
 // Shows the balance and the amount you receive for the selected route.
@@ -268,7 +269,7 @@ export const Output = ({
     <div className="skt-w skt-w-mt-6">
       <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between">
         <div className="skt-w skt-w-flex skt-w-items-center">
-          <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5">
+          <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5" style={{fontWeight: "bold"}}>
             To
           </span>
           <ChainSelect
@@ -281,7 +282,7 @@ export const Output = ({
           <Balance token={tokenWithBalance} isLoading={isBalanceLoading} />
         )}
       </div>
-
+      <Divider/>
       <TokenInput
         amount={`${outputAmount ? `~${outputAmount}` : ""}`}
         updateToken={_setDestToken}
@@ -293,3 +294,11 @@ export const Output = ({
     </div>
   );
 };
+
+const Divider = styled.div`
+background-color: black;
+height: 2px;
+width: 100%;
+margin-top: 10px;
+margin-bottom: 10px;
+`

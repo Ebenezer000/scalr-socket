@@ -27,6 +27,7 @@ input[type="number"] {
 
 @layer base {
   :root {
+    --socket-block-input-output-color: 241, 241, 241;
     --socket-widget-accent-color: 239, 51, 116;
     --socket-widget-on-accent-color: 255, 255, 255;
     --socket-widget-primary-color: 255, 255, 255;

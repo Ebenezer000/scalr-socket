@@ -29,6 +29,8 @@ import useMappedChainData from "../hooks/useMappedChainData";
 import useDebounce from "../hooks/useDebounce";
 import { Web3Context } from "../providers/Web3Provider";
 import { useTokenList } from "../hooks/useTokenList";
+import { styled } from "styled-components";
+
 
 // Component that handles the source chain parameters. (FromChain, Source Token)
 // Shows the balance for the source chain, and takes the input from the user for amount.
@@ -313,7 +315,7 @@ export const Input = ({
     <div className="skt-w skt-w-mt-3.5">
       <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between">
         <div className="skt-w skt-w-flex skt-w-items-center">
-          <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5">
+          <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5" style={{fontWeight: "bold"}}>
             From
           </span>
           <ChainSelect
@@ -330,6 +332,7 @@ export const Input = ({
           />
         )}
       </div>
+      <Divider/>
       <TokenInput
         source
         amount={inputAmount}
@@ -342,3 +345,13 @@ export const Input = ({
     </div>
   );
 };
+
+const Divider = styled.div`
+background-color: black;
+height: 2px;
+width: 100%;
+margin-top: 10px;
+margin-bottom: 10px;
+
+
+`

@@ -1,6 +1,7 @@
 import { formatCurrencyAmount } from "../../utils";
 import { Spinner } from "./Spinner";
 import { TokenBalanceReponseDTO } from "@socket.tech/socket-v2-sdk";
+import { styled } from "styled-components";
 
 export const Balance = ({
   token,
@@ -17,15 +18,28 @@ export const Balance = ({
     5
   );
   return (
+    <Baldiv>
+      Bal: {token && _formattedBalance}
     <button
       disabled={!onClick}
-      className={`skt-w skt-w-input skt-w-button skt-w-text-widget-primary skt-w-text-opacity-70 skt-w-text-xs skt-w-text-right skt-w-flex skt-w-items-center skt-w-transition-all ${
-        onClick ? "hover:skt-w-underline" : ""
+      className={`button ${
+        onClick ? "" : ""
       }`}
       onClick={onClick}
     >
-      <span className="skt-w-mr-1">Bal: {token && _formattedBalance}</span>
+      <span className="">Max</span>
       {isLoading && <Spinner size={3} />}
     </button>
+    </Baldiv>
   );
 };
+
+const Baldiv= styled.div`
+.button{
+  margin-left: 7px;
+  border-radius: 5px;
+  padding: 5px;
+  border: none;
+  background-color: rgb(241,241,241)
+}
+`

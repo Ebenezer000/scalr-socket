@@ -39,15 +39,15 @@ function Option({
       <div className="skt-w skt-w-flex skt-w-items-center">
         <img
           src={network?.icon}
-          className="skt-w skt-w-h-6 skt-w-w-6"
-          style={{ borderRadius: `calc(0.3rem * ${borderRadius})` }}
+          className="skt-w skt-w-h-6 skt-w-w-6 currImage"
+          style={{ borderRadius: `calc(1rem * ${borderRadius})` }}
         />
-        <span className="skt-w skt-w-text-sm skt-w-text-widget-primary skt-w-mx-1">
+        <span className="skt-w-text-sm skt-w-text-widget-primary skt-w-mx-1"  style={{ color:"black" }}>
           {networkDisplayName}
         </span>
       </div>
       {selected && !onlyOneNetwork && (
-        <ChevronDown className="skt-w skt-w-text-widget-secondary skt-w-w-4 skt-w-h-4" />
+        <ChevronDown className="skt-w skt-w-text-widget-secondary skt-w-w-4 skt-w-h-4" style={{ color:"black" }} />
       )}
       {children}
     </div>
@@ -84,7 +84,7 @@ export function ChainSelect({
       className={`skt-w skt-w-relative skt-w-p-1.5 ${
         openDropdown ? "skt-w-bg-widget-interactive skt-w-h-auto" : ""
       }`}
-      style={{ borderRadius: `calc(0.5rem * ${borderRadius})` }}
+      style={{ borderRadius: `calc(0.5rem * ${borderRadius})`, fontWeight: "bold", color: "rgb(0,0,0)"}}
       ref={chainDropdownRef}
     >
       {activeNetwork ? (

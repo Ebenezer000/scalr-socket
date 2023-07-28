@@ -28,7 +28,7 @@ export const TokenInput = (props: TokenInputProps) => {
   return (
     <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between skt-w-mt-2.5 skt-w-overflow-hidden skt-w-pb-[1.125rem]">
       <div className="skt-w skt-w-flex skt-w-flex-1">
-        <div className="stk-w skt-w-flex skt-w-flex-col skt-w-relative">
+        <div className="stk-w skt-w-flex skt-w-flex-col skt-w-relative" >
           <input
             className={`skt-w skt-w-input skt-w-text-widget-primary skt-w-text-3xl focus:skt-w-outline-none skt-w-w-full skt-w-h-full skt-w-overflow-ellipsis skt-w-bg-transparent`}
             value={amount}
