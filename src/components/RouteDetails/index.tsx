@@ -44,6 +44,7 @@ export const RouteDetails = () => {
   const excludeBridges = useSelector(
     (state: any) => state.customSettings.excludeBridges
   );
+  const feeParams = useSelector((state: any) => state.customSettings.feeParams);
   const isEnoughBalance = useSelector(
     (state: any) => state.amount.isEnoughBalance
   );
@@ -51,6 +52,7 @@ export const RouteDetails = () => {
   const { userAddress } = web3Context.web3Provider;
   const singleTxOnly = useSelector((state: any) => state.quotes.singleTxOnly);
   const swapSlippage = useSelector((state: any) => state.quotes.swapSlippage);
+  const zpHide = useSelector((state: any) => state.customSettings.zpHide);
 
   // Hook to fetch the quotes for given params.
   const { data, isQuotesLoading } = useRoutes(
@@ -63,7 +65,9 @@ export const RouteDetails = () => {
     includeBridges,
     excludeBridges,
     singleTxOnly,
-    swapSlippage
+    swapSlippage,
+    feeParams?.feeTakerAddress,
+    feeParams?.feePercent
   );
 
   // Boolean variable to fill all condition before the api call is made to fetch quotes.
@@ -232,16 +236,27 @@ export const RouteDetails = () => {
       >
         {getButtonStatus()}
       </Button>
-      <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between skt-w-text-widget-secondary skt-w-mt-2.5 skt-w-text-xs">
-        <a
-          href="https://socketdottech.zendesk.com/hc/en-us"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="skt-w skt-w-anchor"
-        >
-          Powerd By Socket
-        </a>
-      </div>
+
+      {!zpHide && (
+        <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between skt-w-text-widget-secondary skt-w-mt-2.5 skt-w-text-xs">
+          <a
+            href="http://socket.tech/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="skt-w skt-w-anchor"
+          >
+            Powered by Socket
+          </a>
+          <a
+            href="https://socketdottech.zendesk.com/hc/en-us"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="skt-w skt-w-anchor"
+          >
+            Support
+          </a>
+        </div>
+      )}
 
       {transitions(
         (style, item) =>

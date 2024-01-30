@@ -1,5 +1,5 @@
 import { WidgetProps } from "../types";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import {
   setCustomDestNetworks,
@@ -13,8 +13,15 @@ import {
   setExludeBridges,
   setSingleTxOnly,
   setApiKey,
+  setFeeParams,
+  setHideIntegratorFee,
+  setInitialAmount,
+  setZpHide
 } from "../state/customSettingsSlice";
-import { setSingleTxOnly as setSingleTxOnlyFromUser } from "../state/quotesSlice";
+import {
+  setSingleTxOnly as setSingleTxOnlyFromUser,
+  setSortPref,
+} from "../state/quotesSlice";
 import { formatRGB } from "../utils";
 
 // To set custom chains, tokens, default values passed as props
@@ -30,10 +37,16 @@ export const useCustomSettings = (props: WidgetProps) => {
     enableSameChainSwaps,
     includeBridges,
     excludeBridges,
+    defaultSortPreference,
     singleTxOnly,
+    feeParams,
     API_KEY,
+    hideIntegratorFee,
+    initialAmount,
+    zpHide
   } = props;
   const dispatch = useDispatch();
+  const firstRender = useRef(true);
 
   useEffect(() => {
     sourceNetworks && dispatch(setCustomSourceNetworks(sourceNetworks));
@@ -49,6 +62,21 @@ export const useCustomSettings = (props: WidgetProps) => {
       excludeBridges?.length > 0 &&
       dispatch(setExludeBridges(excludeBridges));
     dispatch(setSingleTxOnly(singleTxOnly));
+    
+    // This code is executed only on first render
+    // This is done so that the values are not updated or reset to default value
+    // due to network or account updates
+    if(firstRender.current){
+      defaultSortPreference && dispatch(setSortPref(defaultSortPreference));
+      initialAmount && dispatch(setInitialAmount(initialAmount))
+
+      firstRender.current = false
+    }
+
+    if (feeParams?.feePercent && feeParams?.feeTakerAddress) {
+      dispatch(setFeeParams(feeParams));
+      hideIntegratorFee && dispatch(setHideIntegratorFee(hideIntegratorFee));
+    }
 
     // if singleTxOnly is set to true in the plugin config,
     // additionally set the in-plugin singleTxOnly value to true
@@ -60,6 +88,8 @@ export const useCustomSettings = (props: WidgetProps) => {
     if (API_KEY) {
       dispatch(setApiKey(API_KEY));
     }
+
+    dispatch(setZpHide(zpHide));
   }, [props]);
 
   // Theme

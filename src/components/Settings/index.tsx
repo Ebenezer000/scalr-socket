@@ -15,9 +15,8 @@ export const Settings = () => {
       <button
         onClick={() => toggleSettingsModal(true)}
         className="skt-w skt-w-button skt-w-input skt-w-flex skt-w-ml-3"
-        style={{ margin: "auto"}}
       >
-        <SettingsIcon style={{color: "black", fontWeight: "10px"}} className=" hover:skt-w-text-widget-primary hover:skt-w-rotate-45 skt-w-duration-200 skt-w-ease-linear" />
+        <SettingsIcon className="skt-w skt-w-w-5.5 skt-w-h-5.5 skt-w-text-widget-secondary hover:skt-w-text-widget-primary hover:skt-w-rotate-45 skt-w-duration-200 skt-w-ease-linear" />
       </button>
     </>
   );

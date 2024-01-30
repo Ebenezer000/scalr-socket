@@ -29,7 +29,7 @@ function Option({
   const networkDisplayName = network?.chainId === 1101 ? 'zkEVM' : network?.chainId === 324 ? 'zkSync' : network?.name;
   return (
     <div
-      className={`skt-w skt-w-flex skt-w-w-28 skt-w-items-center skt-w-cursor-pointer skt-w-flex-shrink-0 ${
+      className={`skt-w skt-w-flex skt-w-w-[140px] skt-w-items-center skt-w-cursor-pointer skt-w-flex-shrink-0 ${
         selected
           ? ""
           : "skt-w-p-1.5 hover:skt-w-bg-widget-secondary hover:skt-w-bg-opacity-80"
@@ -39,15 +39,15 @@ function Option({
       <div className="skt-w skt-w-flex skt-w-items-center">
         <img
           src={network?.icon}
-          className="skt-w skt-w-h-6 skt-w-w-6 currImage"
-          style={{ borderRadius: `calc(1rem * ${borderRadius})` }}
+          className="skt-w skt-w-h-6 skt-w-w-6"
+          style={{ borderRadius: `calc(0.3rem * ${borderRadius})` }}
         />
-        <span className="skt-w-text-sm skt-w-text-widget-primary skt-w-mx-1"  style={{ color:"black" }}>
+        <span className="skt-w skt-w-text-sm skt-w-text-widget-primary skt-w-mx-1">
           {networkDisplayName}
         </span>
       </div>
       {selected && !onlyOneNetwork && (
-        <ChevronDown className="skt-w skt-w-text-widget-secondary skt-w-w-4 skt-w-h-4" style={{ color:"black" }} />
+        <ChevronDown className="skt-w skt-w-text-widget-secondary skt-w-w-4 skt-w-h-4" />
       )}
       {children}
     </div>
@@ -84,7 +84,7 @@ export function ChainSelect({
       className={`skt-w skt-w-relative skt-w-p-1.5 ${
         openDropdown ? "skt-w-bg-widget-interactive skt-w-h-auto" : ""
       }`}
-      style={{ borderRadius: `calc(0.5rem * ${borderRadius})`, fontWeight: "bold", color: "rgb(0,0,0)"}}
+      style={{ borderRadius: `calc(0.5rem * ${borderRadius})` }}
       ref={chainDropdownRef}
     >
       {activeNetwork ? (
@@ -96,11 +96,9 @@ export function ChainSelect({
         />
       ) : (
         <span
-          className="skt-w skt-w-text-sm skt-w-text-widget-primary skt-w-bg-widget-secondary skt-w-py-1.5 skt-w-px-2"
-          style={{ borderRadius: `calc(0.3rem * ${borderRadius})` }}
-        >
-          Loading chains
-        </span>
+          className="skt-w-block skt-w skt-w-text-sm skt-w-text-widget-primary skt-w-bg-widget-secondary skt-w-py-1.5 skt-w-px-2 skt-w-animate-pulse skt-w-w-[120px] skt-w-h-6"
+          style={{ borderRadius: `calc(1rem * ${borderRadius})` }}
+        />
       )}
 
       {openDropdown && (

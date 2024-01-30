@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Currency, Network, onNetworkChange, onTokenChange } from "../types";
+import { styled } from "styled-components";
 
 // component
 import { TokenInput } from "./TokenInput";
@@ -18,7 +19,6 @@ import { useTokenList } from "../hooks/useTokenList";
 import useDebounce from "../hooks/useDebounce";
 
 import { Web3Context } from "../providers/Web3Provider";
-import { styled } from "styled-components";
 
 // Component that handles the destination chain parameters. (ToChain, Destination Token)
 // Shows the balance and the amount you receive for the selected route.
@@ -91,6 +91,12 @@ export const Output = ({
   useEffect(() => {
     setFirstRender(true);
     setFirstRenderNetwork(true);
+
+    // resetting the dest chain on unmount
+    // on toggle, the dest chain state would retain causing issues in setting token on the first render
+    return () => {
+      dispatch(setDestChain(null));
+    };
   }, []);
 
   function updateNetwork(network: Network) {
@@ -166,7 +172,7 @@ export const Output = ({
         updateNetwork(
           supportedNetworks?.find(
             (x: Network) => x.chainId === defaultDestNetwork
-          )
+          ) ?? supportedNetworks?.[0]
         );
       }
     }
@@ -194,6 +200,7 @@ export const Output = ({
     )?.[0];
 
     // If same chains are selected, and if the source token is same as usdc, set the dest token to the first token from the list
+    // todo - if usdc is not found, should show native token.
     if (
       sourceChainId === destChainId &&
       usdc?.address === sourceToken?.address
@@ -255,6 +262,18 @@ export const Output = ({
     }
   }, [allDestTokens, sourceToken]);
 
+  // to set default dest token when changed
+  useEffect(() => {
+    if (defaultDestTokenAddress && allDestTokens) {
+      const _token =
+        allDestTokens?.filter(
+          (x: Currency) =>
+            x.address.toLowerCase() === defaultDestTokenAddress.toLowerCase()
+        )?.[0] ?? fallbackToUSDC();
+      _setDestToken(_token);
+    }
+  }, [defaultDestTokenAddress, allDestTokens]);
+
   const [_destToken, _setDestToken] = useState<Currency>();
   useDebounce(
     () => {
@@ -267,31 +286,31 @@ export const Output = ({
 
   return (
     <div className="skt-w skt-w-mt-6">
-      <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between">
-        <div className="skt-w skt-w-flex skt-w-items-center">
-          <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5" style={{fontWeight: "bold"}}>
-            To
-          </span>
-          <ChainSelect
-            networks={supportedNetworksSubset}
-            activeNetworkId={destChainId}
-            onChange={updateNetwork}
-          />
-        </div>
-        {!noTokens && (
-          <Balance token={tokenWithBalance} isLoading={isBalanceLoading} />
-        )}
+    <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between">
+      <div className="skt-w skt-w-flex skt-w-items-center">
+        <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5" style={{fontWeight: "bold"}}>
+          To
+        </span>
+        <ChainSelect
+          networks={supportedNetworksSubset}
+          activeNetworkId={destChainId}
+          onChange={updateNetwork}
+        />
       </div>
-      <Divider/>
-      <TokenInput
-        amount={`${outputAmount ? `~${outputAmount}` : ""}`}
-        updateToken={_setDestToken}
-        activeToken={destToken}
-        tokens={allDestTokens}
-        noTokens={noTokens}
-        tokenToDisable={sourceChainId === destChainId && sourceToken}
-      />
+      {!noTokens && (
+        <Balance token={tokenWithBalance} isLoading={isBalanceLoading} />
+      )}
     </div>
+    <Divider/>
+    <TokenInput
+      amount={`${outputAmount ? `~${outputAmount}` : ""}`}
+      updateToken={_setDestToken}
+      activeToken={destToken}
+      tokens={allDestTokens}
+      noTokens={noTokens}
+      tokenToDisable={sourceChainId === destChainId && sourceToken}
+    />
+  </div>
   );
 };
 

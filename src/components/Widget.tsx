@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { WidgetProps } from "../types";
 import { useDispatch, useSelector } from "react-redux";
+import { styled } from "styled-components";
 
 // context
 import { useContext } from "react";
@@ -19,12 +20,12 @@ import { ErrorModal } from "./common/ErrorModal";
 import { Refuel } from "./Refuel";
 import { SettingsModal } from "./Settings/SettingsModal";
 import { OpRewards, OpRewardsModal } from "./OpRewards";
+import { IoSwapVertical } from "react-icons/io5"
 
 // hooks
 import { useChains } from "../hooks/apis";
 import { useCustomSettings } from "../hooks/useCustomSettings";
 import { CreditCard, Edit } from "react-feather";
-import { IoSwapVertical } from "react-icons/io5"
 import { useTransition } from "@react-spring/web";
 import {
   setActiveRoute,
@@ -33,13 +34,12 @@ import {
   setIsTxModalOpen,
 } from "../state/modals";
 import { setSourceAmount } from "../state/amountSlice";
-import { styled } from "styled-components";
 
 // Main Widget -> Base file.
 export const Widget = (props: WidgetProps) => {
   const {
     customize,
-    title = "Send",
+    title = props?.enableSameChainSwaps ? "Bridge & Swap" : "Bridge",
   } = props;
   const customSettings = useContext(CustomizeContext);
   const web3Context = useContext(Web3Context);
@@ -182,58 +182,58 @@ export const Widget = (props: WidgetProps) => {
       <OpRewardsModal />
       <ErrorModal />
     </FullWidget>
-  );
-};
-
-const SingleTxMessage = () => {
-  const singleTxOnly = useSelector((state: any) => state.quotes.singleTxOnly); // this state changes on user input
-  const singleTxOnlyFromDev = useSelector(
-    (state: any) => state.customSettings.singleTxOnly
-  ); // this is set by the developer in the plugin config
-  const sourceChainId = useSelector(
-    (state: any) => state.networks.sourceChainId
-  );
-  const destChainId = useSelector((state: any) => state.networks.destChainId);
-  const dispatch = useDispatch();
-
-  function openSettingsModal() {
-    dispatch(setIsSettingsModalOpen(true));
+    );
+  };
+  
+  const SingleTxMessage = () => {
+    const singleTxOnly = useSelector((state: any) => state.quotes.singleTxOnly); // this state changes on user input
+    const singleTxOnlyFromDev = useSelector(
+      (state: any) => state.customSettings.singleTxOnly
+    ); // this is set by the developer in the plugin config
+    const sourceChainId = useSelector(
+      (state: any) => state.networks.sourceChainId
+    );
+    const destChainId = useSelector((state: any) => state.networks.destChainId);
+    const dispatch = useDispatch();
+  
+    function openSettingsModal() {
+      dispatch(setIsSettingsModalOpen(true));
+    }
+  
+    if (!singleTxOnly || sourceChainId === destChainId)
+      return <p className="skt-w skt-w-h-5"></p>; // to prevent the layout shift
+    return (
+      <p className="skt-w skt-w-text-sm skt-w-text-widget-secondary skt-w-pr-3 skt-w-pl-3.5 skt-w-flex skt-w-items-center skt-w-h-5">
+        Showing single transaction routes only{" "}
+        {!singleTxOnlyFromDev && (
+          <button
+            onClick={openSettingsModal}
+            className="skt-w skt-w-button skt-w-input skt-w-ml-1.5 skt-w-flex"
+          >
+            <Edit className="skt-w skt-w-w-3.5 skt-w-h-3.5 skt-w-text-widget-accent" />
+          </button>
+        )}
+      </p>
+    );
+  };
+  
+  const FullWidget = styled.div`
+  background-color: rgba(2, 2, 2, 1);
+  .settingsIcon{
+    padding:10px;
+    border-radius:10px;
+    background-color: rgb(241,241,241)
   }
-
-  if (!singleTxOnly || sourceChainId === destChainId)
-    return <p className="skt-w skt-w-h-5"></p>; // to prevent the layout shift
-  return (
-    <p className="skt-w skt-w-text-sm skt-w-text-widget-secondary skt-w-pr-3 skt-w-pl-3.5 skt-w-flex skt-w-items-center skt-w-h-5">
-      Showing single transaction routes only{" "}
-      {!singleTxOnlyFromDev && (
-        <button
-          onClick={openSettingsModal}
-          className="skt-w skt-w-button skt-w-input skt-w-ml-1.5 skt-w-flex"
-        >
-          <Edit className="skt-w skt-w-w-3.5 skt-w-h-3.5 skt-w-text-widget-accent" />
-        </button>
-      )}
-    </p>
-  );
-};
-
-const FullWidget = styled.div`
-background-color: rgba(2, 2, 2, 1);
-.settingsIcon{
-  padding:10px;
-  border-radius:10px;
-  background-color: rgb(241,241,241)
-}
-`
-const InputBlock = styled.div`
-  background-color: rgba(201, 201, 201, 0.7);
-  padding: 15px;
-  margin-top:15px;
-  border-radius: 10px;
-`
-const OutputBlock = styled.div`
- background-color: rgba(201, 201, 201, 0.7);
- padding: 15px;
- border-radius: 10px;
-
-`
+  `
+  const InputBlock = styled.div`
+    background-color: rgba(201, 201, 201, 0.7);
+    padding: 15px;
+    margin-top:15px;
+    border-radius: 10px;
+  `
+  const OutputBlock = styled.div`
+   background-color: rgba(201, 201, 201, 0.7);
+   padding: 15px;
+   border-radius: 10px;
+  
+  `

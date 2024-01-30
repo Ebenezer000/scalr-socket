@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useContext, useEffect, useState } from "react";
 import { Currency, Network, onNetworkChange, onTokenChange } from "../types";
 import { NATIVE_TOKEN_ADDRESS } from "../consts";
+import { styled } from "styled-components";
 
 // component
 import { TokenInput } from "./TokenInput";
@@ -29,8 +30,6 @@ import useMappedChainData from "../hooks/useMappedChainData";
 import useDebounce from "../hooks/useDebounce";
 import { Web3Context } from "../providers/Web3Provider";
 import { useTokenList } from "../hooks/useTokenList";
-import { styled } from "styled-components";
-
 
 // Component that handles the source chain parameters. (FromChain, Source Token)
 // Shows the balance for the source chain, and takes the input from the user for amount.
@@ -98,6 +97,9 @@ export const Input = ({
   const sameChainSwapsEnabled = useSelector(
     (state: any) => state.customSettings.sameChainSwapsEnabled
   );
+  const initialAmount = useSelector(
+    (state: any) => state.customSettings.initialAmount
+  );
 
   function updateNetwork(network: Network) {
     dispatch(setSourceChain(network?.chainId));
@@ -143,7 +145,7 @@ export const Input = ({
         ) ?? _supportedNetworks?.[0]
       );
     }
-  }, [allNetworks]);
+  }, [allNetworks, defaultSourceNetwork]);
 
   // For Input & tokens
   const inputAmountFromReduxState = useSelector(
@@ -234,6 +236,18 @@ export const Input = ({
     }
   }, [allSourceTokens]);
 
+  // to set default source token when changed
+  useEffect(() => {
+    if (defaultSourceTokenAddress && allSourceTokens) {
+      const _token =
+        allSourceTokens?.filter(
+          (x: Currency) =>
+            x.address.toLowerCase() === defaultSourceTokenAddress.toLowerCase()
+        )?.[0] ?? fallbackToUSDC();
+      _setSourceToken(_token);
+    }
+  }, [defaultSourceTokenAddress, allSourceTokens]);
+
   const [_sourceToken, _setSourceToken] = useState<Currency>();
   useDebounce(
     () => {
@@ -306,42 +320,50 @@ export const Input = ({
     } else formateAndParseAmount(balance);
   }
 
-  // Reset source amount on mount
+  // to set the initialAmount if any
   useEffect(() => {
-    inputAmountFromReduxState && dispatch(setSourceAmount(null));
+    if (initialAmount) onChangeInput(initialAmount);
+  }, [initialAmount]);
+
+  useEffect(() => {
+    // resetting the source chain on unmount
+    // on toggle, the source chain state would retain causing issues in setting token on the first render
+    return () => {
+      dispatch(setSourceChain(null));
+    };
   }, []);
 
   return (
     <div className="skt-w skt-w-mt-3.5">
-      <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between">
-        <div className="skt-w skt-w-flex skt-w-items-center">
-          <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5" style={{fontWeight: "bold"}}>
-            From
-          </span>
-          <ChainSelect
-            networks={supportedNetworks}
-            activeNetworkId={sourceChainId}
-            onChange={updateNetwork}
-          />
-        </div>
-        {!noTokens && (
-          <Balance
-            token={tokenWithBalance}
-            isLoading={isBalanceLoading}
-            onClick={() => setMaxBalance(tokenWithBalance?.balance)}
-          />
-        )}
+    <div className="skt-w skt-w-flex skt-w-items-center skt-w-justify-between">
+      <div className="skt-w skt-w-flex skt-w-items-center">
+        <span className="skt-w skt-w-text-widget-secondary skt-w-text-sm skt-w-mr-1.5" style={{fontWeight: "bold"}}>
+          From
+        </span>
+        <ChainSelect
+          networks={supportedNetworks}
+          activeNetworkId={sourceChainId}
+          onChange={updateNetwork}
+        />
       </div>
-      <Divider/>
-      <TokenInput
-        source
-        amount={inputAmount}
-        onChangeInput={onChangeInput}
-        updateToken={_setSourceToken}
-        activeToken={sourceToken}
-        tokens={allSourceTokens}
-        noTokens={noTokens}
-      />
+      {!noTokens && (
+        <Balance
+          token={tokenWithBalance}
+          isLoading={isBalanceLoading}
+          onClick={() => setMaxBalance(tokenWithBalance?.balance)}
+        />
+      )}
+    </div>
+    <Divider/>
+    <TokenInput
+      source
+      amount={inputAmount}
+      onChangeInput={onChangeInput}
+      updateToken={_setSourceToken}
+      activeToken={sourceToken}
+      tokens={allSourceTokens}
+      noTokens={noTokens}
+    />
     </div>
   );
 };
@@ -352,6 +374,4 @@ height: 2px;
 width: 100%;
 margin-top: 10px;
 margin-bottom: 10px;
-
-
 `

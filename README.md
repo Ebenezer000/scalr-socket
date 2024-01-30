@@ -14,7 +14,7 @@ npm install scalr-socket
 yarn add scalr-socket
 ```
 
-**Note :** The plugin requires `react` (>=17.0.1) and `react-dom` (>=17.0.1) as peerDepencies.
+**Note :** The plugin requires `react` (>=18.0.1) and `react-dom` (>=18.0.1) as peerDepencies.
 
 ## Documentation
 

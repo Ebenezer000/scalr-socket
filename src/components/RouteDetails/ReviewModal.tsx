@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { CustomizeContext } from "../../providers/CustomizeProvider";
 import { BRIDGE_DISPLAY_NAMES, UserTxType } from "../../consts/";
-import Tippy from "@tippyjs/react";
 import { ChevronUp, Edit, Info } from "react-feather";
 
 // components
@@ -11,6 +10,7 @@ import { Modal } from "../common/Modal";
 import { InnerCard } from "../common/InnerCard";
 import { TxStepDetails } from "../TxModal/TxStepDetails";
 import { TokenDetailsRow } from "../common/TokenDetailsRow";
+import { Tooltip } from "../common/Tooltip";
 
 // actions
 import { setIsSettingsModalOpen, setIsTxModalOpen } from "../../state/modals";
@@ -34,6 +34,7 @@ export const ReviewModal = ({
   const dispatch = useDispatch();
   const bestRoute = useSelector((state: any) => state.quotes.bestRoute);
   const selectedRoute = useSelector((state: any) => state.routes.selectedRoute);
+  const hideIntegratorFee = useSelector((state: any) => state.customSettings.hideIntegratorFee);
   const [showTxDetails, setShowTxDetails] = useState<boolean>(false);
   const [quoteUpdated, setQuoteUpdated] = useState<boolean>(false);
   const [isSameChainSwap, setIsSameChainSwap] = useState<boolean>(false);
@@ -122,6 +123,13 @@ export const ReviewModal = ({
   );
   const bridgeFeeTokenSymbol = bridgeData?.protocolFees.asset.symbol;
 
+  // Integrator Fee
+  const integratorFee = selectedRoute?.route?.integratorFee;
+  const integratorFeeToken = integratorFee?.asset;
+  const integratorFeeInToken =
+    integratorFee?.amount &&
+    formatCurrencyAmount(integratorFee?.amount, integratorFeeToken?.decimals, 4);
+
   // OP Rebates data
   const opRebateData = bridgeData?.extraData?.opRebateData;
   const opToken = opRebateData?.asset;
@@ -130,9 +138,9 @@ export const ReviewModal = ({
   const OpRebateLabel = (
     <span className="skt-w skt-w-flex skt-w-items-center">
       OP Rewards
-      <Tippy content="Estimated rewards for bridging to Optimism.">
+      <Tooltip tooltipContent="Estimated rewards for bridging to Optimism.">
         <Info className="skt-w skt-w-ml-1.5 skt-w-w-4 skt-w-h-4" />
-      </Tippy>
+      </Tooltip>
     </span>
   );
 
@@ -255,6 +263,12 @@ export const ReviewModal = ({
                 />
               </>
             )}
+            {!hideIntegratorFee && integratorFee?.amount !== '0' && (
+              <RouteDetailRow
+                label="Add-on Fee"
+                value={`${integratorFeeInToken} ${integratorFeeToken?.symbol}`}
+              />
+            )}
             {(!!swapStepInFundMovr || !!swapData) && (
               <RouteDetailRow label="Swap Slippage">
                 <div className="skt-w-flex skt-w-items-center">
@@ -342,7 +356,7 @@ export const ReviewModal = ({
 
             <Button
               onClick={quoteUpdated ? updateSelectedRoute : openTxModal}
-              classNames={`${quoteUpdated ? "skt-w-h-12" : ""}`}
+              classNames={`${quoteUpdated ? "skt-w-h-full" : ""}`}
               disabled={!bestRoute}
             >
               {quoteUpdated
@@ -395,7 +409,7 @@ const FeeDisplay = (props: FeeDisplayProps) => {
         )}
         {feeInUsd !== 0 && (
           <span className="skt-w-opacity-80 skt-w-font-normal">
-            (${feeInUsd?.toFixed(4)})
+            (${feeInUsd?.toFixed(2)})
           </span>
         )}
       </span>
