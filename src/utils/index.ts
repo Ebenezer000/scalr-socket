@@ -1,137 +1,56 @@
-import { ethers } from "ethers";
-import { hexStripZeros } from "ethers/lib/utils";
-import { Currency } from "../types";
-import { UserTxType } from "../consts";
+import { getAddress } from '@ethersproject/address'
+import { AddressZero } from '@ethersproject/constants'
+import { Contract } from '@ethersproject/contracts'
+import { JsonRpcProvider, JsonRpcSigner } from '@ethersproject/providers'
+import { Token } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { ChainTokenMap } from 'hooks/useTokenList/utils'
 
-export const formatCurrencyAmount = (
-  value: number | string,
-  units: number,
-  decimals?: number
-) => {
-  // const formattedAmount = truncateDecimalValue(value.toString(), units);
-  const result = !!value
-    ? ethers.utils.formatUnits(value?.toString(), units)
-    : "";
-  if (result == "0.0" || !result) return "0";
-
-  if (!!decimals) return truncateDecimalValue(result, decimals);
-
-  return result;
-};
-
-export const parseCurrencyAmount = (value: string, units: number) => {
-  const result =
-    !!value && !!units ? ethers.utils.parseUnits(value, units).toString() : "";
-  return result;
-};
-
-export const truncateDecimalValue = (
-  value: number | string,
-  decimals: number
-) => {
-  // truncate upto number of decimals
-  const re = new RegExp("^-?\\d+(?:.\\d{0," + (decimals || -1) + "})?", "g");
-  return value?.toString().match(re)?.[0];
-};
-
-export async function addNetwork(chain, provider): Promise<null | void> {
-  const formattedChainId = hexStripZeros(
-    ethers.BigNumber.from(chain?.chainId).toHexString()
-  );
+// returns the checksummed address if the address is valid, otherwise returns false
+export function isAddress(value: any): string | false {
   try {
-    await provider.send("wallet_addEthereumChain", [
-      {
-        chainId: formattedChainId,
-        chainName: chain.name,
-        rpcUrls: chain.rpcs,
-        nativeCurrency: chain.currency,
-        blockExplorerUrls: chain.explorers,
-      },
-    ]); // EIP-3085
-  } catch (error) {
-    console.error("error adding eth network: ", chain?.chainId, chain, error);
+    return getAddress(value)
+  } catch {
+    return false
   }
 }
 
-export const handleNetworkChange = async (provider, chain) => {
-  const formattedChainId = hexStripZeros(
-    ethers.BigNumber.from(chain?.chainId).toHexString()
-  );
-  try {
-    await provider.send("wallet_switchEthereumChain", [
-      { chainId: formattedChainId },
-    ]);
-  } catch (error) {
-    // network not available
-    if (error.code === 4902) {
-      addNetwork(chain, provider);
-    }
+// shorten the checksummed version of the input address to have 0x + 4 characters at start and end
+export function shortenAddress(address: string, chars = 4): string {
+  const parsed = isAddress(address)
+  if (!parsed) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
   }
-};
-
-export enum ExplorerDataType {
-  TRANSACTION = "transaction",
-  TOKEN = "token",
-  ADDRESS = "address",
-  BLOCK = "block",
+  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
 
-export function getExplorerLink(
-  baseUrl: string,
-  data: string,
-  type: ExplorerDataType
-): string {
-  switch (type) {
-    case ExplorerDataType.TRANSACTION: {
-      return `${baseUrl}/tx/${data}`;
-    }
-    case ExplorerDataType.TOKEN: {
-      return `${baseUrl}/token/${data}`;
-    }
-    case ExplorerDataType.BLOCK: {
-      return `${baseUrl}/block/${data}`;
-    }
-    case ExplorerDataType.ADDRESS:
-    default: {
-      return `${baseUrl}/address/${data}`;
-    }
+// account is not optional
+function getSigner(provider: JsonRpcProvider, account: string): JsonRpcSigner {
+  return provider.getSigner(account).connectUnchecked()
+}
+
+// account is optional
+function getProviderOrSigner(provider: JsonRpcProvider, account?: string): JsonRpcProvider | JsonRpcSigner {
+  return account ? getSigner(provider, account) : provider
+}
+
+// account is optional
+export function getContract(address: string, ABI: any, provider: JsonRpcProvider, account?: string): Contract {
+  if (!isAddress(address) || address === AddressZero) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
   }
+
+  return new Contract(address, ABI, getProviderOrSigner(provider, account) as any)
 }
 
-// Function to convert rgb value to number,number,number form
-export function formatRGB(color: string) {
-  const formattedColor = color
-    .split(",")
-    .map((x) => x.replace(/[^0-9.]/g, ""))
-    .join(",");
-  return formattedColor;
+export function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
-// Filters the tokens of a particular chain from the standard token list
-export function filterTokensByChain(tokens: Currency[], chainId: number) {
-  return tokens.filter((x: Currency) => x.chainId === chainId);
+export function isTokenOnList(chainTokenMap: ChainTokenMap, token?: Token): boolean {
+  return Boolean(token?.isToken && chainTokenMap[token.chainId]?.[token.address])
 }
 
-export const timeInMinutes = (time: number) => {
-  return Math.floor(time / 60) + "m";
-};
-
-// To get the swap step
-export const getSwapTx = (route: any, currentTx: number) => {
-  if (currentTx !== undefined || currentTx !== null) {
-    const fundMovr = route?.userTxs?.filter(
-      (x) => x.userTxType === UserTxType.FUND_MOVR
-    )?.[0];
-
-    const dex = route?.userTxs?.filter(
-      (x) => x.userTxType === UserTxType.DEX_SWAP
-    )?.[0];
-
-    if (fundMovr?.userTxIndex === currentTx) {
-      return fundMovr?.steps?.filter((x) => x.type === "middleware")?.[0];
-    } else if (dex?.userTxIndex === currentTx) {
-      return dex;
-    }
-    return null;
-  }
-};
+export function formattedFeeAmount(feeAmount: FeeAmount): number {
+  return feeAmount / 10000
+}
